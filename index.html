@@ -731,6 +731,13 @@
     let catalogData = [];
     let cart = {};
     let currentFilteredItems = [];
+    const defaultJsonFileName = 'univermag 06-05-2026.json';
+    const jsonCandidates = [...new Set([
+        new URLSearchParams(window.location.search).get('data'),
+        defaultJsonFileName,
+        encodeURI(defaultJsonFileName),
+        'data.json'
+    ].filter(Boolean))];
 
     window.addEventListener('DOMContentLoaded', () => {
         loadData();
@@ -755,12 +762,41 @@
         contentDiv.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
+    function extractGroups(data) {
+        if (Array.isArray(data)) return { groups: data, isValidShape: true };
+        if (data && Array.isArray(data.item_groups)) return { groups: data.item_groups, isValidShape: true };
+        return { groups: [], isValidShape: false };
+    }
+
+    async function fetchCatalogJson() {
+        let lastError = null;
+
+        for (const fileName of jsonCandidates) {
+            try {
+                const res = await fetch(fileName);
+                if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`);
+                return await res.json();
+            } catch (error) {
+                const details = error instanceof Error ? error.message : String(error);
+                lastError = new Error(`${fileName}: ${details}`);
+            }
+        }
+
+        if (lastError) throw lastError;
+        throw new Error('Не удалось подготовить список JSON-кандидатов для загрузки каталога');
+    }
+
     async function loadData() {
         try {
-            const res = await fetch('univermag 06-05-2026.json');
-            if (!res.ok) throw new Error("Файл не найден");
-            const data = await res.json();
-            catalogData = data.item_groups || [];
+            const data = await fetchCatalogJson();
+            const extracted = extractGroups(data);
+            catalogData = extracted.groups;
+            if (!catalogData.length) {
+                const groupsErrorMessage = extracted.isValidShape
+                    ? 'Каталог пуст: категории не найдены'
+                    : 'Неверная структура JSON: ожидается массив категорий';
+                throw new Error(groupsErrorMessage);
+            }
             
             const list = document.getElementById('group-list');
             list.innerHTML = catalogData.map((g, i) => {
@@ -776,7 +812,8 @@
                 selectGroup(0, document.querySelector('.sidebar-item.active'));
             }
         } catch (e) {
-            document.getElementById('group-list').innerHTML = `<div style="color:red">Ошибка загрузки</div>`;
+            console.error('Ошибка загрузки JSON каталога:', e);
+            document.getElementById('group-list').innerHTML = `<div style="color:red">Ошибка загрузки JSON</div>`;
         }
     }
 
