@@ -773,16 +773,15 @@
         for (const fileName of jsonCandidates) {
             try {
                 const res = await fetch(fileName);
-                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`);
                 return await res.json();
             } catch (error) {
-                lastError = error;
+                const details = error instanceof Error ? error.message : String(error);
+                lastError = new Error(`Не удалось загрузить ${fileName}: ${details}`);
             }
         }
 
-        if (lastError instanceof Error) throw lastError;
-        if (lastError) throw new Error(String(lastError));
-        throw new Error('Не удалось загрузить JSON каталога');
+        throw lastError || new Error('Не удалось загрузить JSON каталога');
     }
 
     async function loadData() {
