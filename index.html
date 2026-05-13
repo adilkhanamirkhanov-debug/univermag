@@ -768,6 +768,10 @@
     }
 
     async function fetchCatalogJson() {
+        if (!jsonCandidates.length) {
+            throw new Error('Не задан JSON файл каталога');
+        }
+
         let lastError = null;
 
         for (const fileName of jsonCandidates) {
@@ -777,7 +781,7 @@
                 return await res.json();
             } catch (error) {
                 const details = error instanceof Error ? error.message : String(error);
-                lastError = new Error(`Не удалось загрузить ${fileName}: ${details}`);
+                lastError = new Error(`${fileName}: ${details}`);
             }
         }
 
