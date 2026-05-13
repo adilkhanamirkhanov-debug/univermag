@@ -768,10 +768,6 @@
     }
 
     async function fetchCatalogJson() {
-        if (!jsonCandidates.length) {
-            throw new Error('Не задан JSON файл каталога');
-        }
-
         let lastError = null;
 
         for (const fileName of jsonCandidates) {
