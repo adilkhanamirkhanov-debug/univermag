@@ -732,12 +732,12 @@
     let cart = {};
     let currentFilteredItems = [];
     const defaultJsonFileName = 'univermag 06-05-2026.json';
-    const jsonCandidates = [
+    const jsonCandidates = [...new Set([
         new URLSearchParams(window.location.search).get('data'),
         defaultJsonFileName,
         encodeURI(defaultJsonFileName),
         'data.json'
-    ].filter(Boolean).filter((value, index, array) => array.indexOf(value) === index);
+    ].filter(Boolean))];
 
     window.addEventListener('DOMContentLoaded', () => {
         loadData();
@@ -783,7 +783,7 @@
         }
 
         if (lastError) throw lastError;
-        throw new Error(`Не удалось загрузить JSON каталога. Проверены: ${jsonCandidates.join(', ')}`);
+        throw new Error('Не удалось подготовить список JSON-кандидатов для загрузки каталога');
     }
 
     async function loadData() {
