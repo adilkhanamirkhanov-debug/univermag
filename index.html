@@ -731,6 +731,12 @@
     let catalogData = [];
     let cart = {};
     let currentFilteredItems = [];
+    const jsonCandidates = [
+        new URLSearchParams(window.location.search).get('data'),
+        'univermag 06-05-2026.json',
+        'univermag%2006-05-2026.json',
+        'data.json'
+    ].filter(Boolean);
 
     window.addEventListener('DOMContentLoaded', () => {
         loadData();
@@ -755,12 +761,33 @@
         contentDiv.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
+    function extractGroups(data) {
+        if (Array.isArray(data)) return data;
+        if (data && Array.isArray(data.item_groups)) return data.item_groups;
+        return [];
+    }
+
+    async function fetchCatalogJson() {
+        let lastError = new Error('Файл каталога не найден');
+
+        for (const fileName of jsonCandidates) {
+            try {
+                const res = await fetch(fileName);
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                return await res.json();
+            } catch (error) {
+                lastError = error;
+            }
+        }
+
+        throw lastError;
+    }
+
     async function loadData() {
         try {
-            const res = await fetch('univermag 06-05-2026.json');
-            if (!res.ok) throw new Error("Файл не найден");
-            const data = await res.json();
-            catalogData = data.item_groups || [];
+            const data = await fetchCatalogJson();
+            catalogData = extractGroups(data);
+            if (!catalogData.length) throw new Error('Категории не найдены в JSON');
             
             const list = document.getElementById('group-list');
             list.innerHTML = catalogData.map((g, i) => {
@@ -776,7 +803,8 @@
                 selectGroup(0, document.querySelector('.sidebar-item.active'));
             }
         } catch (e) {
-            document.getElementById('group-list').innerHTML = `<div style="color:red">Ошибка загрузки</div>`;
+            console.error('Ошибка загрузки JSON каталога:', e);
+            document.getElementById('group-list').innerHTML = `<div style="color:red">Ошибка загрузки JSON</div>`;
         }
     }
 
