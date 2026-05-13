@@ -762,13 +762,13 @@
     }
 
     function extractGroups(data) {
-        if (Array.isArray(data)) return data;
-        if (data && Array.isArray(data.item_groups)) return data.item_groups;
-        return [];
+        if (Array.isArray(data)) return { groups: data, isValidShape: true };
+        if (data && Array.isArray(data.item_groups)) return { groups: data.item_groups, isValidShape: true };
+        return { groups: [], isValidShape: false };
     }
 
     async function fetchCatalogJson() {
-        let lastError = new Error('Файл каталога не найден');
+        let lastError = null;
 
         for (const fileName of jsonCandidates) {
             try {
@@ -780,14 +780,17 @@
             }
         }
 
-        throw lastError;
+        throw lastError || new Error('Не удалось загрузить JSON каталога');
     }
 
     async function loadData() {
         try {
             const data = await fetchCatalogJson();
-            catalogData = extractGroups(data);
-            if (!catalogData.length) throw new Error('Категории не найдены в JSON');
+            const extracted = extractGroups(data);
+            catalogData = extracted.groups;
+            if (!catalogData.length) {
+                throw new Error(extracted.isValidShape ? 'Каталог пуст: категории не найдены' : 'Неверная структура JSON: ожидается массив категорий');
+            }
             
             const list = document.getElementById('group-list');
             list.innerHTML = catalogData.map((g, i) => {
