@@ -169,8 +169,14 @@
 }
         
         .sidebar-icon { 
-            font-size: 24px;
+            width: 44px;
+            height: 44px;
+            object-fit: cover;
+            border-radius: 10px;
+            border: 1px solid #eee;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
             flex-shrink: 0;
+            background: #fff;
         }
         
         /* Content */
@@ -544,7 +550,7 @@
                 border-radius: 10px;
             }
 
-           .sidebar-item span:first-child { font-size: 24px !important; margin: 0 0 4px 0 !important; }
+           .sidebar-icon { width: 36px !important; height: 36px !important; margin: 0 0 4px 0 !important; }
             .sidebar-item span:last-child { font-size: 8px !important; line-height: 1.1; white-space: normal !important; font-weight: 700; text-transform: uppercase; }
             
             .sidebar-item.active {
@@ -670,56 +676,56 @@
 </div>
 
 <script>
-    // Иконки категорий с расширенным списком
-    const categoryIcons = {
-        "БЫТОВАЯ ХИМИЯ": "🧼",
-        "СРЕДСТВА ГИГИЕНЫ": "🧻",
-        "КОНСЕРВЫ": "🥫",
-        "бакалея": "🍝",
-        "ТОВАРЫ ДЛЯ ПРАЗДНИКА": "🥳",
-        "ХОЗЯЙСТВЕННЫЕ ТОВАРЫ": "🧹",
-        "ОВОЩИ, ФРУКТЫ, ЯГОДЫ, ГРИБЫ СВЕЖИЕ": "🥦",
-        "КОНДИТЕРСКИЕ ИЗДЕЛИЯ": "🍰",
-        "ГАСТРОНОМИЯ": "🧀",
-        "ЗАМОРОЖЕННЫЕ ПРОДУКТЫ": "🧊",
-        "БЕЗАЛКОГОЛЬНЫЕ НАПИТКИ": "🥤",
-        "МОЛОЧНЫЕ ПРОДУКТЫ": "🥛",
-        "молочка": "🥛",
-        "КОСМЕТИКА, ПАРФЮМЕРИЯ, ФАРМАЦЕВТИКА": "💄",
-        "ЧАЙ, КОФЕ, КАКАО": "☕",
-        "ПИВО, СЛАБОАЛКОГОЛЬНЫЕ НАПИТКИ": "🍺",
-        "ДЕТСКОЕ ПИТАНИЕ, СРЕДСТВА ДЛЯ КОРМЛЕНИЯ": "🍼",
-        "КРЕПКИЙ АЛКОГОЛЬ": "🥃",
-        "вещи": "👕",
-        "ТАБАЧНЫЕ ИЗДЕЛИЯ, ЗАЖИГАЛКИ": "🚬",
-        "кассовая зона": "💰",
-        "ТОВАРЫ ДЛЯ ДОМА": "🏠",
-        "конфеты": "🍬",
-        "ВИНО": "🍷",
-        "ТОВАРЫ ДЛЯ ЖИВОТНЫХ": "🐾",
-        "ХЛЕБОБУЛОЧНЫЕ ИЗДЕЛИЯ": "🥐",
-        "ПЕКАРНЯ": "🥖",
-        "хлебобуоч изд": "🍞",
-        "печенье": "🍪",
-        "макаронные изделия": "🍜",
-        "ТОВАРЫ ДЛЯ ДЕТЕЙ": "🧸",
-        "игрушки": "🎠",
-        "посуда": "🍽️",
-        "тапочки": "🩴",
-        "Сухофрукты": "🥥",
-        "ЭЛЕКТРОТОВАРЫ И АППАРАТУРА": "⚡",
-        "масло": "🧴",
-        "ТОВАРЫ ДЛЯ БАНИ, САУНЫ": "🧖‍♂️",
-        "ГАЛАНТЕРЕЯ И АКСЕССУАРЫ": "👜",
-        "КАНЦЕЛЯРСКИЕ ПРИНАДЛЕЖНОСТИ": "✏️",
-        "ТОВАРЫ ДЛЯ РАЗВЛЕЧЕНИЯ": "🎮",
-        "ТУРИЗМ, ПИКНИК": "🏕️",
-        "КУЛИНАРИЯ": "🥘",
-        "БЫТОВАЯ ТЕХНИКА": "🔌",
-        "ЧУЛОЧНО-НОСОЧНЫЕ ИЗДЕЛИЯ": "🧦",
-        "НИЖНЕЕ БЕЛЬЕ": "👙",
-        "САД, ОГОРОД, ДАЧА": "🌻",
-        "Незаданные": "📦"
+    // PNG-картинки категорий
+    const categoryImages = {
+        "БЫТОВАЯ ХИМИЯ": "cleaning.png",
+        "СРЕДСТВА ГИГИЕНЫ": "hygiene.png",
+        "КОНСЕРВЫ": "canned.png",
+        "бакалея": "grocery.png",
+        "ТОВАРЫ ДЛЯ ПРАЗДНИКА": "kids.png",
+        "ХОЗЯЙСТВЕННЫЕ ТОВАРЫ": "home.png",
+        "ОВОЩИ, ФРУКТЫ, ЯГОДЫ, ГРИБЫ СВЕЖИЕ": "produce.png",
+        "КОНДИТЕРСКИЕ ИЗДЕЛИЯ": "bakery.png",
+        "ГАСТРОНОМИЯ": "grocery.png",
+        "ЗАМОРОЖЕННЫЕ ПРОДУКТЫ": "grocery.png",
+        "БЕЗАЛКОГОЛЬНЫЕ НАПИТКИ": "drinks.png",
+        "МОЛОЧНЫЕ ПРОДУКТЫ": "dairy.png",
+        "молочка": "dairy.png",
+        "КОСМЕТИКА, ПАРФЮМЕРИЯ, ФАРМАЦЕВТИКА": "cosmetics.png",
+        "ЧАЙ, КОФЕ, КАКАО": "coffee-tea.png",
+        "ПИВО, СЛАБОАЛКОГОЛЬНЫЕ НАПИТКИ": "alcohol.png",
+        "ДЕТСКОЕ ПИТАНИЕ, СРЕДСТВА ДЛЯ КОРМЛЕНИЯ": "kids.png",
+        "КРЕПКИЙ АЛКОГОЛЬ": "alcohol.png",
+        "вещи": "home.png",
+        "ТАБАЧНЫЕ ИЗДЕЛИЯ, ЗАЖИГАЛКИ": "alcohol.png",
+        "кассовая зона": "default.png",
+        "ТОВАРЫ ДЛЯ ДОМА": "home.png",
+        "конфеты": "bakery.png",
+        "ВИНО": "alcohol.png",
+        "ТОВАРЫ ДЛЯ ЖИВОТНЫХ": "pets.png",
+        "ХЛЕБОБУЛОЧНЫЕ ИЗДЕЛИЯ": "bakery.png",
+        "ПЕКАРНЯ": "bakery.png",
+        "хлебобуоч изд": "bakery.png",
+        "печенье": "bakery.png",
+        "макаронные изделия": "grocery.png",
+        "ТОВАРЫ ДЛЯ ДЕТЕЙ": "kids.png",
+        "игрушки": "kids.png",
+        "посуда": "home.png",
+        "тапочки": "home.png",
+        "Сухофрукты": "produce.png",
+        "ЭЛЕКТРОТОВАРЫ И АППАРАТУРА": "home.png",
+        "масло": "grocery.png",
+        "ТОВАРЫ ДЛЯ БАНИ, САУНЫ": "hygiene.png",
+        "ГАЛАНТЕРЕЯ И АКСЕССУАРЫ": "home.png",
+        "КАНЦЕЛЯРСКИЕ ПРИНАДЛЕЖНОСТИ": "kids.png",
+        "ТОВАРЫ ДЛЯ РАЗВЛЕЧЕНИЯ": "kids.png",
+        "ТУРИЗМ, ПИКНИК": "home.png",
+        "КУЛИНАРИЯ": "grocery.png",
+        "БЫТОВАЯ ТЕХНИКА": "home.png",
+        "ЧУЛОЧНО-НОСОЧНЫЕ ИЗДЕЛИЯ": "home.png",
+        "НИЖНЕЕ БЕЛЬЕ": "home.png",
+        "САД, ОГОРОД, ДАЧА": "produce.png",
+        "Незаданные": "default.png"
     };
 
     let catalogData = [];
@@ -758,9 +764,9 @@
             
             const list = document.getElementById('group-list');
             list.innerHTML = catalogData.map((g, i) => {
-                const icon = categoryIcons[g.name] || '📦';
+                const imageName = categoryImages[g.name] || 'default.png';
                 return `<div class="sidebar-item ${i === 0 ? 'active' : ''}" onclick="selectGroup(${i}, this)">
-                    <span class="sidebar-icon">${icon}</span>
+                    <img class="sidebar-icon" src="assets/categories/${imageName}" alt="Категория" loading="lazy" onerror="this.onerror=null;this.src='assets/categories/default.png';">
                     <span>${g.name}</span>
                 </div>`;
             }).join('');
