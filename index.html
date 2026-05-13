@@ -780,7 +780,9 @@
             }
         }
 
-        throw lastError || new Error('Не удалось загрузить JSON каталога');
+        if (lastError instanceof Error) throw lastError;
+        if (lastError) throw new Error(String(lastError));
+        throw new Error('Не удалось загрузить JSON каталога');
     }
 
     async function loadData() {
@@ -789,7 +791,10 @@
             const extracted = extractGroups(data);
             catalogData = extracted.groups;
             if (!catalogData.length) {
-                throw new Error(extracted.isValidShape ? 'Каталог пуст: категории не найдены' : 'Неверная структура JSON: ожидается массив категорий');
+                const groupsErrorMessage = extracted.isValidShape
+                    ? 'Каталог пуст: категории не найдены'
+                    : 'Неверная структура JSON: ожидается массив категорий';
+                throw new Error(groupsErrorMessage);
             }
             
             const list = document.getElementById('group-list');
